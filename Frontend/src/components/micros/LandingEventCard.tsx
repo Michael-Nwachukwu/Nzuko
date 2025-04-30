@@ -5,9 +5,11 @@ import React from "react";
 const LandingEventCard = ({
   title,
   organizer,
+  address,
 }: {
   title: string;
   organizer: string;
+  address: string;
 }) => {
   return (
     <>
@@ -34,7 +36,7 @@ const LandingEventCard = ({
                 </div>
                 <Link
                   className="rounded-full hover:border border-solid border-white/[.145] transition-colors flex items-center justify-center bg-stone-800 text-stone-200 hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-                  href="/"
+                  href={`/register/${address}`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >

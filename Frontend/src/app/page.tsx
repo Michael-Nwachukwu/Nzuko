@@ -102,6 +102,7 @@ export default function Home() {
             <LandingEventCard
               key={event.address}
               title={event.name}
+              address={event.address}
               organizer={event.organizerAddress || "Unknown Organizer"} // Handle undefined organizer
             />
           ))
