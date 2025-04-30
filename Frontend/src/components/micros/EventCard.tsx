@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import { Clock2 } from "lucide-react";
 import { IconLocation } from "@tabler/icons-react";
 import { Badge } from "../ui/badge";
-import { format } from "date-fns";
+import { formatEventTime } from "@/lib/reusables";
 
 export const EventItem = ({
   className,
@@ -12,7 +12,9 @@ export const EventItem = ({
   active,
   venue,
   publisher,
-  time
+  time,
+  handleSheetOpen,
+  eventDetails
 }: {
   className?: string;
   title?: string | React.ReactNode;
@@ -22,21 +24,9 @@ export const EventItem = ({
   venue?: string;
   publisher?: string;
   time?: bigint;
+  handleSheetOpen: (eventDetails: IEventDetails) => void;
+  eventDetails: IEventDetails;
 }) => {
-  // Format the time properly
-  const formatEventTime = (timeValue: bigint | undefined) => {
-    if (!timeValue) return "TBA";
-
-    const dateObj = new Date(Number(timeValue) * 1000);
-
-    // Fix for potential incorrect year issue - ensure it's 2025 or later
-    if (dateObj.getFullYear() < 2025 || dateObj.getFullYear() > 3000) {
-      // We're in 2025, so make sure all events have the correct year context
-      dateObj.setFullYear(2025);
-    }
-
-    return format(dateObj, "MMM dd, yyyy h:mm a");
-  };
 
   return (
     <div
@@ -44,6 +34,7 @@ export const EventItem = ({
         "row-span-1 rounded-xl group/bento hover:shadow-xl transition duration-200 shadow-input dark:shadow-none p-4 bg-slate-950 dark:border-white/[0.2] hover:border-slate-600 justify-between flex flex-col space-y-6",
         className
       )}
+      onClick={() => handleSheetOpen(eventDetails)}
     >
       {header}
       <div className="transition duration-200 space-y-2">

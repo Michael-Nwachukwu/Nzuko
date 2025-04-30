@@ -176,11 +176,11 @@ const Page = () => {
       </Dialog>
 
       {/* Form and UI */}
-      <div className="grid sm:grid-cols-2 mx-auto max-w-[960px] gap-8 p-4">
+      <div className="grid sm:grid-cols-2 mx-auto max-w-full gap-8 p-4">
         <div className="flex w-full">
           <CardWithForm />
         </div>
-        <form className="w-auto max-w-2xl">
+        <form className="w-auto max-w-full">
           <div className="grid grid-cols-1 gap-6">
             {/* Calendar and Visibility Dropdowns */}
             <div className="flex justify-between">
@@ -240,7 +240,7 @@ const Page = () => {
             </div>
 
             <div className="grid grid-cols-1 gap-2 bg-white bg-opacity-10 rounded-xl p-3">
-              <div className="flex items-center justify-between p-3 w-80">
+              <div className="flex items-center justify-between p-3 w-auto sm:w-80">
                 <span>Offline Location</span>
                 <button
                   type="button"

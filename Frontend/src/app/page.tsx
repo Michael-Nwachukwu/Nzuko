@@ -1,13 +1,15 @@
 "use client";
 import Link from "next/link";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import LandingEventCard from "@/components/micros/LandingEventCard";
 import { Skeleton } from "@/components/ui/skeleton";
 import useFetchEvents from "@/hooks/useAllEvents";
 import { CircleChevronRight } from "lucide-react";
+import RegisterSheet from "@/components/macros/RegisterSheet";
 
 export default function Home() {
   const { events, loading, fetchEvents } = useFetchEvents();
+  const [selectedEvent, setSelectedEvent] = useState<IEventDetails | undefined>(undefined);
 
   useEffect(() => {
     fetchEvents();
@@ -19,6 +21,19 @@ export default function Home() {
       console.log("Updated events state: ", events);
     }
   }, [events, fetchEvents]);
+
+  const [isSheetOpen, setIsSheetOpen] = useState<boolean>(false);
+  const handleSheetOpen = (event: IEventDetails): void => {
+    setSelectedEvent(event)
+    setIsSheetOpen(true);
+  };
+
+  const handleSheetClose = (): void => {
+    setIsSheetOpen(false);
+    setTimeout(() => {
+      setSelectedEvent(undefined);
+    }, 300);
+  };
 
   return (
     <div className="hscreen sm:p-8 gap-16 px-4 sm:pt-16 sm:px-6 font-[family-name:var(--font-geist-sans)] text-white">
@@ -48,7 +63,6 @@ export default function Home() {
             <Link
               className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
               href="/create"
-              target="_blank"
               rel="noopener noreferrer"
             >
               Create An Event
@@ -103,7 +117,28 @@ export default function Home() {
               key={event.address}
               title={event.name}
               address={event.address}
-              organizer={event.organizerAddress || "Unknown Organizer"} // Handle undefined organizer
+              organizer={event.organizerAddress || "Unknown Organizer"}
+              eventDetails={{
+                ...event,
+                eventName: event.name,
+                eventDescription: event.description,
+                eventImage: event.image,
+                eventDate: new Date(Number(event.startDate)).toISOString(),
+                eventTime: new Date(Number(event.startDate)).toLocaleTimeString(),
+                eventVenue: event.eventVenue
+              }}
+              handleSheetOpen={() => {
+                const transformedEvent = {
+                  ...event,
+                  eventName: event.name,
+                  eventDescription: event.description,
+                  eventImage: event.image,
+                  eventDate: new Date(Number(event.startDate)).toISOString(),
+                  eventTime: new Date(Number(event.startDate)).toLocaleTimeString(),
+                  eventVenue: event.eventVenue
+                };
+                handleSheetOpen(transformedEvent);
+              }}
             />
           ))
         ) : (
@@ -132,129 +167,9 @@ export default function Home() {
           </Link>
         </div>
 
-        {/* {events.map((event) => (
-          <LandingEventCard 
-            key={event.address} 
-            title={event.name} 
-            organizer={event.organizerAddress || "Unknown Organizer"} // Handle undefined organizer
-          />
-        ))} */}
-
-        {/* <div className="md:2/3 relative aspect-[3/3] w-[90%] shrink-0 snap-start snap-always rounded-3xl bg-green-100 sm:w-[44%] md:w-[30%]">
-          <div className="rounded-3xl h-full">
-            <div className="h-full relative">
-              <img
-                src="/flow-bubble.webp"
-                alt="logo"
-                className="objectfill h-full rounded-3xl"
-              />
-
-              <div className="p-4 sm:p-6 flex flex-col justify-between items-start h-full w-full absolute bg-stone-600/40 rounded-3xl top-0 left-0 text-stone-800">
-                <p className="text-3xl sm:text-5xl font-semibold">
-                  Web3Lasgos Conference
-                </p>
-
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full">
-                  <div className="flex flex-col items-start">
-                    <p className="text-md font-semibold">Hosted By</p>
-                    <p className="text-md font-semibold">Mihails Rizakovs</p>
-                  </div>
-                  <Link
-                    className="rounded-full hover:border border-solid border-white/[.145] transition-colors flex items-center justify-center bg-stone-800 text-stone-200 hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-                    href="/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Register For Event
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="md:2/3 relative aspect-[3/3] w-[90%] shrink-0 snap-start snap-always rounded-3xl bg-green-100 sm:w-[44%] md:w-[30%]">
-          <div className="p-4 sm:p-6 bg-[#017dda] rounded-3xl h-full">
-            <div className="flex flex-col justify-between items-start h-full">
-              <p className="text-xl font-medium">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Error
-                temporibus, obcaecati sed vero nobis velit.
-              </p>
-
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between mt-5 w-full gap-5 sm:gap-0">
-                <div className="flex flex-col items-start">
-                  <p className="text-md font-semibold">Hosted By</p>
-                  <p className="text-md font-semibold">Mihails Rizakovs</p>
-                </div>
-
-                <RegisterButton />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="md:2/3 relative aspect-[3/3] w-[90%] shrink-0 snap-start snap-always rounded-3xl sm:w-[44%] md:w-[30%]">
-          <div className="p-4 sm:p-6 bg-stone-700/30 rounded-3xl h-full">
-            <div className="flex flex-col justify-between items-start h-full">
-              <p className="text-xl font-light">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Error
-                temporibus, obcaecati sed vero nobis velit.
-              </p>
-
-              <div className="flex items-center justify-between mt-5 w-full">
-                <div className="inline-flex items-center gap-3">
-                  <Link href={"/"} className="underline underline-offset-4">
-                    Privacy
-                  </Link>
-                  <Link href={"/"} className="underline underline-offset-4">
-                    Terms
-                  </Link>
-                </div>
-                <Link
-                  className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-                  href="/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Create An Event
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="md:2/3 relative aspect-[3/3] w-[90%] shrink-0 snap-start snap-always rounded-3xl bg-green-100 sm:w-[44%] md:w-[30%]">
-          <div className="rounded-3xl h-full">
-            <div className="h-full relative">
-              <img
-                src="/flow-bubble.webp"
-                alt="logo"
-                className="objectfill h-full rounded-3xl"
-              />
-              <div className="p-4 sm:p-6 flex flex-col justify-between items-start h-full w-full absolute bg-stone-600/40 rounded-3xl top-0 left-0 text-stone-800">
-                <p className="text-3xl sm:text-5xl font-semibold">
-                  Web3Lasgos Conference
-                </p>
-
-                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full">
-                  <div className="flex flex-col items-start">
-                    <p className="text-md font-semibold">Hosted By</p>
-                    <p className="text-md font-semibold">Mihails Rizakovs</p>
-                  </div>
-                  <Link
-                    className="rounded-full hover:border border-solid border-white/[.145] transition-colors flex items-center justify-center bg-stone-800 text-stone-200 hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-                    href="/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Register For Event
-                  </Link>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div> */}
       </div>
+      <RegisterSheet
+        isOpen={isSheetOpen} onClose={handleSheetClose} eventDetails={selectedEvent} />
     </div>
   );
 }

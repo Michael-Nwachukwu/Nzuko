@@ -4,7 +4,7 @@ import { useAccount } from "wagmi";
 import useFetchEvents, { IEventDetails } from "@/hooks/useAllEvents";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { Wallet, Plus } from "lucide-react";
+import { Wallet, Plus, Clock2, Badge } from "lucide-react";
 import {
   Dialog,
   DialogContent,
@@ -13,7 +13,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { EventItem } from "@/components/micros/EventCard";
-import { trimAddress } from "@/lib/reusables";
+import { formatEventTime, trimAddress } from "@/lib/reusables";
+import { IconLocation } from "@tabler/icons-react";
 
 const Skeleton = () => (
   <div className="flex w-40 justify-end items-end h-full min-h-[6rem] rounded-xl bg-gradient-to-br from-neutral-900 dark:to-neutral-800 to-neutral-100"></div>
@@ -119,18 +120,45 @@ export default function ManageEvents() {
               key={index}
               className="cursor-pointer"
             >
-              <EventItem
-                title={event.name}
-                description={event.description}
-                header={<Skeleton />}
-                venue={event.eventVenue}
-                publisher={trimAddress(event.organizerAddress)}
-                time={event.startDate}
-                active={
-                  new Date(Number(event.startDate) * 1000).setHours(0, 0, 0, 0) ===
-                  new Date().setHours(0, 0, 0, 0)
-                }
-              />
+              <div
+                className=
+                "row-span-1 rounded-xl group/bento hover:shadow-xl transition duration-200 shadow-input dark:shadow-none p-4 bg-slate-950 dark:border-white/[0.2] hover:border-slate-600 justify-between flex flex-col space-y-6"
+              >
+                <div className="flex w-40 justify-end items-end h-full min-h-[6rem] rounded-xl bg-gradient-to-br from-neutral-900 dark:to-neutral-800 to-neutral-100"></div>
+
+                <div className="transition duration-200 space-y-2">
+                  <div className="flex items-center gap-3 text-slate-400">
+                    <div className="inline-flex items-center gap-1.5 text-slate-400">
+                      <Clock2 size={17} />
+                      <p className="uppercase font-medium">{formatEventTime(event.startDate)}</p>
+                    </div>
+                    {new Date(Number(event.startDate) * 1000).setHours(0, 0, 0, 0) ===
+                      new Date().setHours(0, 0, 0, 0) && (
+                        <Badge className="bg-[#d69712] bg-opacity-15 rounded text-yellow-300 inline-flex items-center gap-2">
+                          <span className="w-1.5 h-1.5 rounded-full bg-yellow-300 animate-pulse"></span>
+                          Live
+                        </Badge>
+                      )}
+                  </div>
+                  <h2 className="font-sans font-bold text-slate-200 text-2xl leading-6">
+                    {event.name}
+                  </h2>
+                  <p className="text-md font-medium text-slate-300">By <span className="font-bold text-green-300">{event.organizerAddress}</span></p>
+                  <div className="inline-flex items-center gap-1.5 text-slate-400">
+                    <IconLocation size={17} />
+                    <p className="font-medium text-s">{event.eventVenue}</p>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-slate-400">
+                    <Badge className="bg-[#3cbd2c] bg-opacity-15 rounded text-green-300 inline-flex items-center gap-2">
+                      $10
+                    </Badge>
+                    + Gas
+                  </div>
+                  <p className="font-sans font-normal text-neutral-600 text-xs dark:text-neutral-300 line-clamp-2">
+                    {event.description}
+                  </p>
+                </div>
+              </div>
             </Link>
           ))}
         </div>
