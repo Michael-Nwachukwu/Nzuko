@@ -5,9 +5,17 @@ import Image from "next/image";
 import { CiLocationOn } from "react-icons/ci";
 import DialogDemo from "@/components/registerComps/DialogDemo";
 import { useState } from "react";
+import { useParams } from "next/navigation";
+import useFetchEventDetails from "@/hooks/useSingleEvent";
+import { trimAddress } from "@/lib/reusables";
 
 const Register = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const params = useParams();
+  const contractAddress = params.contractAddress as string;
+  const { loading, eventDetails, error } =
+    useFetchEventDetails(contractAddress);
+
   return (
     <div className="h-screen sm:p-8 gap-16 px-4 sm:pt-16 sm:px-6 font-[family-name:var(--font-geist-sans)] text-white">
       <div className="w-full f-full flex justify-center items-center">
@@ -24,7 +32,11 @@ const Register = () => {
             </div>
 
             <div className="p-2 pl-10 w-full">
-              <p className="text-5xl font-bold mb-2">Event Title</p>
+              <p className="text-5xl font-bold mb-2">{eventDetails?.eventName}</p>
+
+              <p className="text-[#f7f5f2] mb-2">
+                {eventDetails?.eventDescription}
+              </p>
 
               <NestedDate />
 
@@ -52,7 +64,7 @@ const Register = () => {
           <div className="p-2">
             <p className="font-regular text-[#f7f5f2] mb-2">Hosted By</p>
 
-            <p className="font-bold text-lg/">Ejezie Franklin</p>
+            <p className="font-bold text-lg/">{eventDetails?.organizerAddress ? trimAddress(eventDetails.organizerAddress) : 'N/A'}</p>
           </div>
         </div>
 

@@ -13,6 +13,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { EventItem } from "@/components/micros/EventCard";
+import { trimAddress } from "@/lib/reusables";
 
 const Skeleton = () => (
   <div className="flex w-40 justify-end items-end h-full min-h-[6rem] rounded-xl bg-gradient-to-br from-neutral-900 dark:to-neutral-800 to-neutral-100"></div>
@@ -52,10 +53,6 @@ export default function ManageEvents() {
       setUserEvents([]);
     }
   }, [address, events, isConnected]);
-
-  const trimAddress = (address: string) => {
-    return `${address.slice(0, 6)}...${address.slice(-4)}`;
-  };
 
   // Empty state component
   const EmptyState = () => (

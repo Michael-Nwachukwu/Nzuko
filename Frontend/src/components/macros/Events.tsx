@@ -7,6 +7,7 @@ import useFetchEvents, { IEventDetails } from "@/hooks/useAllEvents";
 import { format, isAfter } from "date-fns";
 import Link from "next/link";
 import Image from "next/image";
+import { trimAddress } from "@/lib/reusables";
 
 const Skeleton = () => (
   <div className="flex w-40 justify-end items-end h-full min-h-[6rem] rounded-xl bg-gradient-to-br from-neutral-900 dark:to-neutral-800 to-neutral-100"></div>
@@ -83,10 +84,6 @@ export function Events() {
     }
   }, [events]);
 
-  const trimAddress = (address: string) => {
-    return `${address.slice(0, 6)}...${address.slice(-4)}`;
-  };
-
   // Create timeline data based on the filtered events
   const timelineData = Object.keys(filteredEvents).map((date) => ({
     title: date,
@@ -94,7 +91,7 @@ export function Events() {
       <div className="grid sm:grid-cols-2 gap-4">
         {filteredEvents[date].map((event, index: number) => (
           <Link
-            href={`/manage-event/manage/${event.address}`}
+            href={`/register/${event.address}`}
             key={index}
           >
             <EventItem

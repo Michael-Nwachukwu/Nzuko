@@ -8,6 +8,7 @@ type EventDetails = {
   eventVenue: string;
   startDate: bigint;
   totalTicketSold: bigint;
+  organizerAddress: string;
 } | null;
 
 const useFetchEventDetails = (contractAddress: string | null) => {
@@ -35,6 +36,7 @@ const useFetchEventDetails = (contractAddress: string | null) => {
               eventVenue: matchingEvent.eventVenue,
               startDate: matchingEvent.startDate,
               totalTicketSold: matchingEvent.totalTicketSold,
+              organizerAddress: matchingEvent.organizerAddress
             });
             setError(null);
           } else {
